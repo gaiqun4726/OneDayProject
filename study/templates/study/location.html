@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="/static/echarts.min.js"></script>
+    <script src="/static/jquery-3.1.1.js"></script>
+</head>
+{% load staticfiles %}
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+
+<div style="width: 1600px;height:655px;background-image: url('{% static "study/background.jpg" %}');">
+{#    <img src="{% static 'study/background.jpg' %}">#}
+    <div id="main" style="width: 600px;height:400px;"></div>
+</div>
+<button>定位</button>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var data = [
+        [
+            [53354, 79.1, 321773631, 'United States', 2015]
+        ]
+    ];
+
+    var option = {
+        xAxis: {
+            show: false,
+        },
+        yAxis: {
+            splitLine: {
+                lineStyle: {
+                    type: 'dashed'
+                }
+            },
+            scale: true,
+            show: false
+        },
+        series: [{
+            name: '1990',
+            data: data[0],
+            type: 'effectScatter',
+            symbolSize: 25,
+            label: {
+                emphasis: {
+                    show: true,
+                    formatter: function (param) {
+                        return param.data[3];
+                    },
+                    position: 'top'
+                }
+            },
+            itemStyle: {
+                normal: {
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(120, 36, 50, 0.5)',
+                    shadowOffsetY: 5,
+                    color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                        offset: 0,
+                        color: 'rgb(251, 118, 123)'
+                    }, {
+                        offset: 1,
+                        color: 'rgb(204, 46, 72)'
+                    }])
+                }
+            }
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+{#<script>#}
+{#    $("#dataUpdate").click(function () {#}
+{#        function fetchData() {#}
+{#            var points = ""#}
+{##}
+{#            function onDataReceived(series) {#}
+{#                var x = series.x#}
+{#                var y = series.y#}
+{#                points = "<img style=\"left:" + x + "px;bottom:" + y + "px;" +#}
+{#                        "z-index:1;position:absolute;\" src=\"/static/pics/current_location.png\">";#}
+{#                $('#points').html(points)#}
+{#            }#}
+{##}
+{#            // Normally we call the same URL - a script connected to a#}
+{#            // database - but in this case we only have static example#}
+{#            // files, so we need to modify the URL.#}
+{#            $.ajax({#}
+{#                url: {% url 'randomfunc' %},#}
+{#                type: "GET",#}
+{#                dataType: "json",#}
+{#                success: onDataReceived#}
+{#            });#}
+{#            if (true) {#}
+{#                setTimeout(fetchData, 3000);#}
+{#            }#}
+{#        }#}
+{##}
+{#        setTimeout(fetchData, 3000);#}
+{#    });#}
+{#</script>#}
+</body>
+
+</html>

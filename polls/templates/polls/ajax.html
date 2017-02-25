@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax Test</title>
+    {% load staticfiles %}
+    <script src="{% static 'polls/js/jquery-3.1.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $("button").click(function () {
+                $.get("{% url 'polls:ajax_load' %}", function(ret) {
+                    $("#test").html(ret)
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="test">the origin words</div>
+    <button>ajax</button>
+</body>
+</html>

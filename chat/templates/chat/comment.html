@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comment</title>
+    {% load staticfiles %}
+    <script src="{% static 'chat/js/jquery-3.1.1.min.js' %}"></script>
+    {% csrf_token %}
+    <script>
+        $(function () {
+            $("#send").click(function () {
+                $("#resText").load("{% url 'chat:test' %} .para", {first: "Gai", second: "Qun"});
+            });
+        });
+    </script>
+</head>
+<body>
+<input type="button" id="send" value="ajax obtain">
+<div class="comment">some comments</div>
+<div id="resText"></div>
+</body>
+</html>
