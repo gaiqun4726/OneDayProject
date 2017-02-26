@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^ajax-dict$', views.ajax_dict, name='ajax-dict'),
     url(r'^location$', views.getLocation, name='location'),
     url(r'^location2$', views.getLocation2, name='location2'),
-    url(r'^getrandom$', views.generateRandom, name='getrandom')
+    url(r'^getrandom$', views.generateRandom, name='getrandom'),
+    url(r'^getcord$', views.getCord, name='getcord')
 ]

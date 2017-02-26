@@ -14,3 +14,4 @@ class QueueResources(object):
 # 全局共享的指纹库字典
 class DictResources(object):
     spectrumDict = {}
+    locationDict = {}

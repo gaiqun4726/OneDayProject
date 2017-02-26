@@ -7,6 +7,8 @@ import math
 
 wifiMessageQueue = QueueResources.wifiMessageQueue
 locatingMessageQueue = QueueResources.locatingMessageQueue
+maxSize = 1000
+lock = threading.Lock()  # 缓冲队列锁
 
 
 # 预处理类
@@ -21,7 +23,11 @@ class Preprocessor(threading.Thread):
         block = wifiMessageQueue.get()
         # print block
         self.preprocess(block)
+        lock.acquire()
+        if locatingMessageQueue.qsize() == maxSize:
+            locatingMessageQueue.get()
         locatingMessageQueue.put(self.locatingMessageDict)
+        lock.release()
         # print self.locatingMessageDict
         self.locatingMessageDict = {}
 

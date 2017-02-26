@@ -1,26 +1,32 @@
 # coding=utf-8
+from __future__ import print_function
 import threading
 import math
 from resources import QueueResources, DictResources
 
 locatingMessageQueue = QueueResources.locatingMessageQueue
 spectrumDict = DictResources.spectrumDict
+locationDict = DictResources.locationDict
 
 
 # 定位线程类
-class Locator(threading.Thread):
-    def __init__(self, threadName):
-        threading.Thread.__init__(self, name=threadName)
-
+class Locator(object):
     def getLoacatingMessage(self, muMac='B4:0B:44:2F:C8:A2'):
         global locatingMessageQueue
+        global locationDict
         messageDict = locatingMessageQueue.get()
-        # print messageDict
+
         message = messageDict.get(muMac, -1)
+        print(message)
+        res = [-1, -1]
 
         if message != -1:
             # print message
-            self.getLocation(message)
+            locationID = self.getLocation(message)
+            cord = locationDict[locationID]
+            res[0] = round(cord['X'],2)
+            res[1] = round(cord['Y'],2)
+        return res
 
     # 使用NN(Nearest Neighbour)方法计算定位结果
     def getLocation(self, message):
@@ -42,10 +48,10 @@ class Locator(threading.Thread):
             if dist < self.minDist:
                 self.locationID = location
                 self.minDist = dist
-        print self.locationID, '\n'
+        locationID = self.locationID
         self.locationID = 0
         self.minDist = 1000.
-        # print 'locating finished'
+        return locationID
 
     # 计算信号强度向量之间的欧几里德距离
     def euclidDist(self, rssiPairList):
@@ -54,7 +60,3 @@ class Locator(threading.Thread):
             x, y = pair
             powSum += pow((int(x) - int(y)), 2)
         return math.sqrt(powSum)
-
-    def run(self):
-        while True:
-            self.getLoacatingMessage()
