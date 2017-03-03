@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import print_function
 from __future__ import print_function
 import pandas as pd
+import os
 from resources import DictResources
 from pandas import DataFrame
 import numpy as np
@@ -11,11 +12,13 @@ from sklearn.cluster import AffinityPropagation
 spectrumDict = DictResources.spectrumDict
 locationDict = DictResources.locationDict
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # 将指纹库读入内存的指纹库字典
 class SpectrumLoader(object):
     def __init__(self,
-                 fp_path=r"C:\Users\DELL\Desktop\spectrum.csv"):
+                 fp_path=os.path.join(BASE_DIR, 'static\study\spectrum.csv')):
         self.path = fp_path
 
     # 从指纹库的csv文件加载指纹库字典
@@ -38,7 +41,7 @@ class SpectrumLoader(object):
 
 class LocationDictLoader(object):
     def __init__(self,
-                 location_map_path=r"L:\Graduation Project\finger data\middleFile\2017-01-20\location-map.csv"):
+                 location_map_path=os.path.join(BASE_DIR, 'static\study\location-map.csv')):
         self.path = location_map_path
 
     def loadLoactionDict(self):
