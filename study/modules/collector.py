@@ -36,7 +36,7 @@ class Collector(threading.Thread):
     def __init__(self, threadName):
         threading.Thread.__init__(self, name=threadName)
         self.wifiMessageList = []
-        self.cycle = 2  # 采样周期
+        self.cycle = 1  # 采样周期
 
     def setBlockMessage(self, msg):
         global wifiMessageQueue

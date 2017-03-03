@@ -25,3 +25,6 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice
+
+# class Timetest(models.Model):
+#     dateTime = models.DateTimeField('time test')

@@ -15,7 +15,7 @@ locationDict = DictResources.locationDict
 # 将指纹库读入内存的指纹库字典
 class SpectrumLoader(object):
     def __init__(self,
-                 fp_path=r"L:\Graduation Project\finger data\middleFile\2017-01-20\B4-0B-44-2F-C8-A2spectrum.csv"):
+                 fp_path=r"C:\Users\DELL\Desktop\spectrum.csv"):
         self.path = fp_path
 
     # 从指纹库的csv文件加载指纹库字典

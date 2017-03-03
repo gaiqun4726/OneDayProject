@@ -3,6 +3,7 @@ from __future__ import print_function
 import threading
 import math
 from resources import QueueResources, DictResources
+from loader import *
 
 locatingMessageQueue = QueueResources.locatingMessageQueue
 spectrumDict = DictResources.spectrumDict
@@ -11,21 +12,35 @@ locationDict = DictResources.locationDict
 
 # 定位线程类
 class Locator(object):
+    def __init__(self):
+        self.history = {}
+
     def getLoacatingMessage(self, muMac='B4:0B:44:2F:C8:A2'):
         global locatingMessageQueue
         global locationDict
         messageDict = locatingMessageQueue.get()
 
         message = messageDict.get(muMac, -1)
-        print(message)
+        print(u'原始数据', message)
         res = [-1, -1]
 
         if message != -1:
-            # print message
-            locationID = self.getLocation(message)
-            cord = locationDict[locationID]
-            res[0] = round(cord['X'],2)
-            res[1] = round(cord['Y'],2)
+            historyRecord = self.history.get(muMac, -1)
+            newMessage = message.copy()
+            if historyRecord != -1:
+                # print(u'有历史数据', historyRecord)
+                for key in historyRecord.keys():
+                    val = newMessage.get(key, -1)
+                    if val == -1:
+                        newMessage[key] = historyRecord[key]
+
+            self.history[muMac] = message
+            # print(u'新的数据', newMessage)
+            locationID = self.getLocation(newMessage)
+            if locationID != -1:
+                cord = locationDict[locationID]
+                res[0] = round(cord['X'], 2)
+                res[1] = round(cord['Y'], 2)
         return res
 
     # 使用NN(Nearest Neighbour)方法计算定位结果
@@ -41,14 +56,16 @@ class Locator(object):
             for ap in spectrumItem.keys():
                 if ap in message.keys():
                     rssiPairList.append((message[ap][0], spectrumItem[ap][0]))
-                else:
-                    rssiPairList.append((-100, spectrumItem[ap][0]))
+                    # else:
+                    #     rssiPairList.append((-100, spectrumItem[ap][0]))
             dist = self.euclidDist(rssiPairList)
             # print dist, '\n'
             if dist < self.minDist:
                 self.locationID = location
                 self.minDist = dist
         locationID = self.locationID
+        if self.minDist > 20:
+            locationID = -1
         self.locationID = 0
         self.minDist = 1000.
         return locationID
@@ -60,3 +77,16 @@ class Locator(object):
             x, y = pair
             powSum += pow((int(x) - int(y)), 2)
         return math.sqrt(powSum)
+
+
+if __name__ == '__main__':
+    locator = Locator()
+    spectrumLoader = SpectrumLoader()
+    spectrumLoader.loadSpectrum()
+
+    locationDictLoader = LocationDictLoader()
+    locationDictLoader.loadLoactionDict()
+
+    message = {'74:1F:4A:C8:9F:80': [-46.0, 11], '38:91:D5:86:CF:20': [-62.0, 11], '38:91:D5:86:D1:00': [-76.0, 11],
+               '38:91:D5:86:D8:80': [-78.0, 11]}
+    print(locator.getLocation(message))
